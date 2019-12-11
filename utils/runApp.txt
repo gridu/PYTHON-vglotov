@@ -1,0 +1,4 @@
+python3 -m pip install --user virtualenv
+python3 -m testenv env
+pip install -r utils/requirements.txt
+python3 app.py
