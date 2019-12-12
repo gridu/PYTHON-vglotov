@@ -42,26 +42,8 @@ class Book(db.Model):
         db.session.commit()
         return bool(is_successful)
 
-    def update_book_price(_isbn, _price):
-        book_to_update = Book.get_book(_isbn)
-        book_to_update.price = _price
-        db.session.commit()
-
-    def update_book_name(_isbn, _name):
-        book_to_update = Book.get_book(_isbn)
-        book_to_update.name = _name
-        db.session.commit()
-
     def rename_book(_id, _title):
         book_to_rename = Book.query.filter_by(id=_id).first()
         book_to_rename.title = _title
         book_to_rename.updated_date_time = datetime.now().isoformat()
         db.session.commit()
-
-    def __repr__(self):
-        book_object = {
-            'name': self.name,
-            'price': self.price,
-            'isbn': self.isbn
-        }
-        return json.dumps(book_object)

@@ -14,7 +14,7 @@ def validBookObject(bookObject):
     available_types = []
     for book in BookType:
         available_types.append(book.value)
-    if bookObject["type"] in available_types and "title" in bookObject:
+    if bookObject["type"] in available_types and "title" in bookObject and "creation_date" in bookObject:
         return True
     else:
         return False
@@ -115,4 +115,3 @@ def delete_book(id):
 if __name__ == "__main__":
     db.create_all()
     app.run(port=5000)
-    Book.add_book(BookType.ROMANCE.value, "300 Spartans", "2019-11-11", None)
