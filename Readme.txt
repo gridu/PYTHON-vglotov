@@ -18,11 +18,7 @@ Next methods are implemented:
         "type": "Satire"
     }
 
-    /v1/books/manipulation DELETE - Delete book with arguments (id)
-    payload example:
-    {
-        "id": 2
-    }
+    /v1/books/manipulation/<id> DELETE - Delete book with arguments (<id>)
 
     /v1/books/manipulation PUT - Change the name of the book with arguments (id)
     payload example:
@@ -33,17 +29,9 @@ Next methods are implemented:
 
     /v1/books/manipulation GET - Returns “No implementation for `GET` method”
 
-    /v1/books/latest GET - Get all the latest added books limited by some amount with arguments (limit)
-    payload example:
-    {
-        "limit": 2
-    }
+    /v1/books/latest/<limit> GET - Get all the latest added books limited by some amount with arguments (<limit>)
 
-    /v1/books/info GET - Get info(type, name etc …) about a book with arguments (ID)
-    payload example:
-    {
-        "id": 2
-    }
+    /v1/books/info/<id> GET - Get info(type, name etc …) about a book with arguments (<id>)
 
     /v1/books/ids GET - Get all ID of books by title with arguments (title)
     payload example:

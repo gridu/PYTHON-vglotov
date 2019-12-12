@@ -61,23 +61,17 @@ def add_book():
         return response
 
 
-@app.route('/v1/books/info')
-def get_book():
-    request_data = request.get_json()
-    if 'id' in request_data:
-        return_value = Book.get_book_by_id(request_data['id'])
-        log_str = 'id ' + str(request_data['id'])
-    if 'title' in request_data:
-        return_value = Book.get_book_by_title(request_data['title'])
-        log_str = 'title ' + request_data['title']
-    log.info('Get book with ' + log_str)
+@app.route('/v1/books/info/<int:id>')
+def get_book(id):
+    return_value = Book.get_book_by_id(id)
+    log.info('Get book with id = ' + str(id))
     return jsonify(return_value)
 
 
-@app.route('/v1/books/latest', methods=['GET'])
-def get_latest_books():
-    log.info('Get latest book with amount limit = ' + str(request.get_json()['limit']))
-    return jsonify({'books': Book.get_latest_books(request.get_json()['limit'])})
+@app.route('/v1/books/latest/<int:limit>', methods=['GET'])
+def get_latest_books(limit):
+    log.info('Get latest book with amount limit = ' + str(limit))
+    return jsonify({'books': Book.get_latest_books(limit)})
 
 
 @app.route('/v1/books/ids', methods=['GET'])
@@ -105,11 +99,10 @@ def rename_book():
     return response
 
 
-@app.route('/v1/books/manipulation', methods=['DELETE'])
-def delete_book():
-    request_data = request.get_json()
-    if Book.delete_book(request_data['id']):
-        log.info(' Book with ID ' + str(request_data['id']) + ' is deleted')
+@app.route('/v1/books/manipulation/<int:id>', methods=['DELETE'])
+def delete_book(id):
+    if Book.delete_book(id):
+        log.info(' Book with ID ' + str(id) + ' is deleted')
         return Response("", 204)
 
     invalidBookErrMsg = {
