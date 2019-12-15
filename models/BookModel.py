@@ -15,7 +15,7 @@ class Book(db.Model):
     updated_date_time = db.Column(db.String(30), nullable=True)
 
     def json(self):
-        return {"id": self.id, "type": self.type, "title": self.title, "creation_date": self.creation_date, "updated_date_time": self.updated_date_time}
+        return {'id': self.id, 'type': self.type, 'title': self.title, 'creation_date': self.creation_date, 'updated_date_time': self.updated_date_time}
 
     def add_book(_type, _title, _creation_date, _updated_date_time):
         new_book = Book(type=_type, title=_title, creation_date=_creation_date, updated_date_time=_updated_date_time)

@@ -1,7 +1,7 @@
 # Library app
 Execute next script to start app:
 ```sh
-$ ./install/runApp.txt
+$ ./run_app.sh
 ```
 This will install all needed requirements and create a database with one table where book entries can be stored using next properties:
 
