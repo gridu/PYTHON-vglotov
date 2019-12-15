@@ -27,7 +27,7 @@ def validBookObjectToRename(bookObject):
         return False
 
 
-@app.route('/books')
+@app.route('/v1/books')
 def get_books():
     log.info(' Gathering all books')
     return jsonify({'books': Book.get_all_books()})
@@ -61,10 +61,10 @@ def add_book():
         return response
 
 
-@app.route('/v1/books/info/<int:id>')
-def get_book(id):
-    return_value = Book.get_book_by_id(id)
-    log.info('Get book with id = ' + str(id))
+@app.route('/v1/books/info/<int:_id>')
+def get_book(_id):
+    return_value = Book.get_book_by_id(_id)
+    log.info('Get book with id = ' + str(_id))
     return jsonify(return_value)
 
 

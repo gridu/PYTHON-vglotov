@@ -1,5 +1,5 @@
 python3 -m pip install --user virtualenv
 python3 -m testenv env
-pip install -r utils/requirements.txt
+pip install -r install/requirements.txt
 python -m pytest tests/testLibrary.py
 python3 app.py

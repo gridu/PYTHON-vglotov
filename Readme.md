@@ -12,6 +12,13 @@ This will install all needed requirements and create a database with one table w
     updated_date_time - time when book title was updated, assigned automatically
 
 ### Methods implemented:
+
+- Get list of all books with all 5 attributes mentioned above
+
+        /v1//books GET
+        
+  expected return code: 200 OK
+
 - Add book with no arguments but request payload as json contains fields (type, title, creation date):
     
         /v1/books/manipulation POST 
@@ -24,9 +31,17 @@ This will install all needed requirements and create a database with one table w
             "type": "Satire"
         }
 
-- Delete book with arguments (<id>)
+   expected return code: 201 CREATED
+   
+   expected error code: 400 BAD REQUEST
 
-        /v1/books/manipulation/<id> DELETE  
+- Delete book with arguments (id)
+
+        /v1/books/manipulation/<id> DELETE
+        
+   expected return code: 204 NO CONTENT
+   
+   expected error code: 404 NOT FOUND  
 
 - Change the name of the book with arguments (id)
 
@@ -36,27 +51,43 @@ This will install all needed requirements and create a database with one table w
 
         {
             "id": 2,
-            "title": "Pomi Dore",
+            "title": "Pomi Dore"
         }
 
+   expected return code: 204 NO CONTENT
+   
+   expected error code: 400 BAD REQUEST
+   
 - Returning “No implementation for `GET` method”:
 
         /v1/books/manipulation GET
+       
+   expected return code: 400 BAD REQUEST
 
-- Get all the latest added books limited by some amount with arguments (<limit>)
+- Get all the latest added books limited by some amount with arguments (limit)
 
         /v1/books/latest/<limit> GET 
+        
+   expected return code: 200 OK
+   
+   expected error code: 404 NOT FOUND
 
-- Get info(type, name etc …) about a book with arguments (<id>)
+- Get info(type, name etc…) about a book with arguments (id)
 
-        /v1/books/info/<id> GET - 
-
-- Get all ID of books by title with arguments (title)
+        /v1/books/info/<id> GET 
+        
+   expected return code: 200 OK
+   
+   expected error code: 404 NOT FOUND
+   
+- Get all IDs of books by title with arguments
 
         /v1/books/ids GET
-
+   
     payload example:
 
         {
-        "title": "Pomi Dore"
+            "title": "Pomi Dore"
         }
+
+   expected return code: 200 OK
