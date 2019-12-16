@@ -119,16 +119,13 @@ if __name__ == '__main__':
     parser.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
     args = parser.parse_args()
 
-    port_number = args.port
-    logger_method = args.log_method
-    logger_lvl = args.log_lvl
-    if logger_method.__eq__('file'):
+    if args.log_method.__eq__('file'):
         fh = logging.FileHandler('app.logger')
     else:
         fh = logging.StreamHandler()
-    fh.setLevel(logging.getLevelName(logger_lvl))
+    fh.setLevel(logging.getLevelName(args.log_lvl))
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
     db.create_all()
-    app.run(port=port_number)
+    app.run(port=args.port)
