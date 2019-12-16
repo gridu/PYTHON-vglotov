@@ -15,7 +15,8 @@ class Book(db.Model):
     updated_date_time = db.Column(db.String(30), nullable=True)
 
     def json(self):
-        return {'id': self.id, 'type': self.type, 'title': self.title, 'creation_date': self.creation_date, 'updated_date_time': self.updated_date_time}
+        return {'id': self.id, 'type': self.type, 'title': self.title, 'creation_date': self.creation_date,
+                'updated_date_time': self.updated_date_time}
 
     def add_book(_type, _title, _creation_date, _updated_date_time):
         new_book = Book(type=_type, title=_title, creation_date=_creation_date, updated_date_time=_updated_date_time)
@@ -29,6 +30,8 @@ class Book(db.Model):
         return [Book.json(book) for book in Book.query.filter_by(id=_id)]
 
     def get_latest_books(_limit):
+        if _limit <= 0:
+            raise ValueError('Limit parameter should be >= 0')
         return [Book.json(book) for book in Book.query.order_by(Book.creation_date.desc()).limit(_limit)]
 
     def get_book_by_title(_title):

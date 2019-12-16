@@ -14,7 +14,7 @@ def valid_book_object(book_object):
     available_types = []
     for book in BookType:
         available_types.append(book.value)
-    return book_object['type'] in available_types and 'title' in book_object \
+    return book_object.get('type') in available_types and 'title' in book_object \
            and 'creation_date' in book_object
 
 

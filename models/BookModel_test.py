@@ -1,3 +1,5 @@
+import pytest
+
 from models.BookModel import *
 from app import get_undefined
 
@@ -90,3 +92,13 @@ def test_all_books_getting():
     assert Book.get_all_books().__len__() == 2 + current_book_amount
     for book_id in id_to_delete:
         assert Book.delete_book(book_id)
+
+
+def test_zero_limit_value_raises_exception():
+    with pytest.raises(ValueError):
+        Book.get_latest_books(0)
+
+
+def test_negative_limit_value_raises_exception():
+    with pytest.raises(ValueError):
+        Book.get_latest_books(-2)
