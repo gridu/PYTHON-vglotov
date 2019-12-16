@@ -15,7 +15,7 @@ This will install all needed requirements and create a database with one table w
 
 - Get list of all books with all 5 attributes mentioned above
 
-        /v1//books GET
+        /v1/books GET
         
   expected return code: 200 OK
 
