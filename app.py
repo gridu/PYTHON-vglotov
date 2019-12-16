@@ -115,17 +115,18 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--port', type=int, default=5000, help='Port number')
-    parser.add_argument('--log_method', type=str, default='console', help='')
+    parser.add_argument('--log_method', type=str, default='console', help='Logging method')
+    parser.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
     args = parser.parse_args()
 
     port_number = args.port
     logger_method = args.log_method
+    logger_lvl = args.log_lvl
     if logger_method.__eq__('file'):
         fh = logging.FileHandler('app.logger')
-        fh.setLevel(logging.DEBUG)
     else:
         fh = logging.StreamHandler()
-        fh.setLevel(logging.DEBUG)
+    fh.setLevel(logging.getLevelName(logger_lvl))
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
