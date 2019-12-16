@@ -1,15 +1,17 @@
 # Library app
-Execute next script to start app on default port = 5000 and console logging:
+Execute next script to start app on default port = 5000 and console logging with 'INFO' log level:
 ```sh
 $ ./run_app.sh
 ```
 
-Execute this script to start app on custom port <port_number>, logging output option (file or console) by typing 'file' to log into app.logger file and 'console'/nothing to log into console and log level (f.e. INFO):
+Execute this script to start app on custom port <port_number>, logging output option (file or console) by typing 'file' 
+to log into app.logger file and 'console'/nothing to log into console and log level (f.e. INFO):
 ```sh
 $ ./run_app.sh <port_number> <log_method> <log_level>
 ```
 
-This will install all needed requirements and create a database with one table where book entries can be stored using next properties:
+This will install all needed requirements and create a database with one table where book entries can be stored using 
+next properties:
 
     id - assigned automatically
     type - type value is stored in ~enums/BookTypes.py enum
