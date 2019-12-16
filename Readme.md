@@ -1,8 +1,14 @@
 # Library app
-Execute next script to start app:
+Execute next script to start app on default port = 5000 and console logging:
 ```sh
 $ ./run_app.sh
 ```
+
+Execute this script to start app on custom port <port_number> and logging output option (file or console) by typing 'file' to log into app.logger file and 'console'/nothing to log into console:
+```sh
+$ ./run_app.sh <port_number> <log_method>
+```
+
 This will install all needed requirements and create a database with one table where book entries can be stored using next properties:
 
     id - assigned automatically
