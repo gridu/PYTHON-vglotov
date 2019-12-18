@@ -14,13 +14,18 @@ class Book(db.Model):
     creation_date = db.Column(db.String(15), nullable=True)
     updated_date_time = db.Column(db.String(30), nullable=True)
 
+    def __init__(self, book_type, title, creation_date, updated_date_time):
+        self.type = book_type
+        self.title = title
+        self.creation_date = creation_date
+        self.updated_date_time = updated_date_time
+
     def json(self):
         return {'id': self.id, 'type': self.type, 'title': self.title, 'creation_date': self.creation_date,
                 'updated_date_time': self.updated_date_time}
 
-    def add_book(_type, _title, _creation_date, _updated_date_time):
-        new_book = Book(type=_type, title=_title, creation_date=_creation_date, updated_date_time=_updated_date_time)
-        db.session.add(new_book)
+    def add_book(self):
+        db.session.add(self)
         db.session.commit()
 
     def get_all_books():
