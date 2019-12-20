@@ -55,3 +55,7 @@ class Book(db.Model):
         book_to_rename.title = _title
         book_to_rename.updated_date_time = datetime.now().isoformat()
         db.session.commit()
+
+
+db.create_all()
+db.session.commit()

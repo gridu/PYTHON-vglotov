@@ -135,12 +135,11 @@ if __name__ == '__main__':
     ARGS = PARSER.parse_args()
 
     if ARGS.log_method.__eq__('file'):
-        HANDLER = logging.FileHandler('app.logger')
+        HANDLER = logging.FileHandler('log/app.logger')
     else:
         HANDLER = logging.StreamHandler()
     HANDLER.setLevel(logging.getLevelName(ARGS.log_lvl))
     HANDLER.setFormatter(FORMATTER)
     LOGGER.addHandler(HANDLER)
 
-    db.create_all()
     app.run(port=ARGS.port)
