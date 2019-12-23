@@ -1,3 +1,4 @@
 venv
 db/bookDB.db
 log/app.logger
+Library.egg-info
