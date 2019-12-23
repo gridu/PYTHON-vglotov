@@ -36,7 +36,7 @@ class Book(db.Model):
 
     def get_latest_books(_limit):
         if _limit <= 0:
-            raise ValueError('Limit parameter should be >= 0')
+            raise ValueError('Limit parameter should be > 0')
         return [Book.json(book) for book in Book.query.order_by(Book.creation_date.desc()).limit(_limit)]
 
     def get_book_by_title(_title):
