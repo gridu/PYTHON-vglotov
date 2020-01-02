@@ -2,16 +2,15 @@
 This module runs the library with no books in it.
 """
 
-
 import json
 import logging
 import argparse
 
 from flask import jsonify, request, Response
-from models.BookModel import *
 from enums.BookTypes import *
+from db.Books_db import *
+from models.BookModel import *
 from db.settings import *
-
 
 LOGGER = logging.getLogger()
 
@@ -40,7 +39,7 @@ def valid_book_object_to_rename(book_object):
 @app.route('/v1/books')
 def get_books():
     LOGGER.info(' Gathering all books')
-    return jsonify({'books': Book.get_all_books()})
+    return jsonify({'books': Books_db.get_all_books()})
 
 
 @app.route('/v1/books/manipulation', methods=['GET'])
@@ -56,8 +55,8 @@ def get_undefined():
 def add_book():
     request_data = request.get_json()
     if valid_book_object(request_data):
-        Book.add_book(request_data['type'], request_data['title'],
-                      request_data['creation_date'], None)
+        Books_db.add_book(Books_db(request_data['type'], request_data['title'],
+                          request_data['creation_date'], None))
         response = Response('', 201, mimetype='application/json')
         response.headers['Location'] = '/v1/books/info'
         LOGGER.info(' Book with title ' + request_data['title'] + ' is added')
@@ -76,18 +75,18 @@ def add_book():
 def get_book(_id):
     return_value = Book.get_book_by_id(_id)
     LOGGER.info('Get book with id = ' + str(_id))
-    return jsonify(return_value)
+    return return_value
 
 
 @app.route('/v1/books/latest/<int:limit>', methods=['GET'])
 def get_latest_books(limit):
     LOGGER.info('Get latest book with amount limit = ' + str(limit))
-    return jsonify({'books': Book.get_latest_books(limit)})
+    return jsonify({'books': Books_db.get_latest_books(limit)})
 
 
 @app.route('/v1/books/ids', methods=['GET'])
 def get_ids_by_title():
-    book_list = Book.get_ids_by_title(request.get_json()['title'])
+    book_list = Books_db.get_ids_by_title(request.get_json()['title'])
     book_list = [str(book_id[0]) for book_id in book_list]
     book_list = 'book_ids: ' + ', '.join(book_list)
     LOGGER.info(' Get all book IDs with title = ' + request.get_json()['title'])
@@ -111,9 +110,9 @@ def rename_book():
     return response
 
 
-@app.route('/v1/books/manipulation/<int:id>', methods=['DELETE'])
+@app.route('/v1/books/manipulation/<int:_id>', methods=['DELETE'])
 def delete_book(_id):
-    if Book.delete_book(_id):
+    if Books_db.delete_book(_id):
         LOGGER.info(' Book with ID ' + str(_id) + ' is deleted')
         return Response('', 204)
 

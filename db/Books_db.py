@@ -1,13 +1,11 @@
-from flask import jsonify
+
 from flask_sqlalchemy import SQLAlchemy
-import json
 from db.settings import app
-from datetime import datetime
 
 db = SQLAlchemy(app)
 
 
-class Book(db.Model):
+class Books_db(db.Model):
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))
@@ -25,26 +23,22 @@ class Book(db.Model):
         return {'id': self.id, 'type': self.type, 'title': self.title, 'creation_date': self.creation_date,
                 'updated_date_time': self.updated_date_time}
 
-    def get_book_by_id(_id):
-        return Book.json(Book.query.filter_by(id=_id).one())
-
-    def get_book_by_title(_title):
-        return [Book.json(book) for book in Book.query.filter_by(title=_title)]
-
-    def get_ids_by_title(_title):
-        return [book for book in Book.query.with_entities(Book.id).filter_by(title=_title)]
+    def add_book(self):
+        db.session.add(self)
+        db.session.commit()
 
     def delete_book(_id):
-        is_successful = Book.query.filter_by(id=_id).delete()
+        is_successful = Books_db.query.filter_by(id=_id).delete()
         db.session.commit()
         return bool(is_successful)
 
-    def rename_book(_id, _title):
-        book_to_rename = Book.query.filter_by(id=_id).first()
-        book_to_rename.title = _title
-        book_to_rename.updated_date_time = datetime.now().isoformat()
-        db.session.commit()
+    def get_all_books():
+        return [Books_db.json(book) for book in Books_db.query.all()]
 
+    def get_ids_by_title(_title):
+        return [_id for _id in Books_db.query.with_entities(Books_db.id).filter_by(title=_title)]
 
-db.create_all()
-db.session.commit()
+    def get_latest_books(_limit):
+        if _limit <= 0:
+            raise ValueError('Limit parameter should be > 0')
+        return [Books_db.json(book) for book in Books_db.query.order_by(Books_db.creation_date.desc()).limit(_limit)]
