@@ -10,7 +10,8 @@ from flask import jsonify, request, Response
 from enums.BookTypes import *
 from db.Books_db import *
 from models.BookModel import *
-from db.settings import *
+from configuration import port, log_lvl, log_method
+from settings import *
 
 LOGGER = logging.getLogger()
 
@@ -127,18 +128,12 @@ if __name__ == '__main__':
     LOGGER.setLevel(logging.DEBUG)
     FORMATTER = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    PARSER = argparse.ArgumentParser()
-    PARSER.add_argument('--port', type=int, default=5000, help='Port number')
-    PARSER.add_argument('--log_method', type=str, default='console', help='Logging method')
-    PARSER.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
-    ARGS = PARSER.parse_args()
-
-    if ARGS.log_method.__eq__('file'):
+    if log_method.__eq__('file'):
         HANDLER = logging.FileHandler('log/app.logger')
     else:
         HANDLER = logging.StreamHandler()
-    HANDLER.setLevel(logging.getLevelName(ARGS.log_lvl))
+    HANDLER.setLevel(logging.getLevelName(log_lvl))
     HANDLER.setFormatter(FORMATTER)
     LOGGER.addHandler(HANDLER)
 
-    app.run(port=ARGS.port)
+    app.run(port=port)

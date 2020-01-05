@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import json
-from db.settings import app
+from settings import app
 from datetime import datetime
 
 db = SQLAlchemy(app)
