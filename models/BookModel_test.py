@@ -8,41 +8,33 @@ from app import get_undefined
 book_title = None
 
 
-def add_book_to_library():
-    global book_title
-    book_title = 'Mother of wind' + datetime.now().isoformat()
-    Books_db.add_book(Book('Satire', book_title, '2019-11-11', None))
-
-
 class BookTest1(unittest.TestCase):
 
     def setUp(self):
-        add_book_to_library()
+        self.book_title = 'Mother of wind' + datetime.now().isoformat()
+        Books_db.add_book(Book('Satire', self.book_title, '2019-11-11', None))
 
     def tearDown(self):
-        global book_title
-        assert Books_db.delete_book((Book.get_book_by_title(book_title)[0])['id'])
+        assert Books_db.delete_book(Book.get_book_by_title(self.book_title)[0]['id'])
 
     def test_book_addition(self):
-        global book_title
-        assert Book.get_book_by_title(book_title).__len__() == 1
+        assert Book.get_book_by_title(self.book_title).__len__() == 1
 
     def test_book_title_update(self):
-        global book_title
-        assert Book.get_book_by_title(book_title).__len__() == 1
-        book_id = (Book.get_book_by_title(book_title)[0])['id']
+        assert Book.get_book_by_title(self.book_title).__len__() == 1
+        book_id = (Book.get_book_by_title(self.book_title)[0])['id']
         new_title = 'Father of wind' + datetime.now().isoformat()
         Book.rename_book(book_id, new_title)
-        assert Book.get_book_by_title(book_title).__len__() == 0
+        assert Book.get_book_by_title(self.book_title).__len__() == 0
         assert Book.get_book_by_title(new_title).__len__() == 1
-        book_title = new_title
+        self.book_title = new_title
 
 
 class BookTest2(unittest.TestCase):
 
     def test_book_deletion(self):
-        global book_title
-        add_book_to_library()
+        book_title = 'Mother of wind' + datetime.now().isoformat()
+        Books_db.add_book(Book('Satire', book_title, '2019-11-11', None))
         assert Book.get_book_by_title(book_title).__len__() == 1
         assert Books_db.delete_book((Book.get_book_by_title(book_title)[0])['id'])
         assert Book.get_book_by_title(book_title).__len__() == 0
@@ -114,4 +106,4 @@ class BookTestWithoutLibraryUsage(unittest.TestCase):
 
     def test_undefined_response_manipulation_get(self):
         response_body = json.loads(get_undefined().get_data().decode('utf8'))
-        assert (response_body['error'].__eq__('No implementation for `GET` method'))
+        self.assertEqual('No implementation for `GET` method', response_body['error'])
