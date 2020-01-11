@@ -56,7 +56,7 @@ def add_book():
     request_data = request.get_json()
     if valid_book_object(request_data):
         Books_db.add_book(Books_db(request_data['type'], request_data['title'],
-                          request_data['creation_date'], None))
+                                   request_data['creation_date'], None))
         response = Response('', 201, mimetype='application/json')
         response.headers['Location'] = '/v1/books/info'
         LOGGER.info(' Book with title ' + request_data['title'] + ' is added')
@@ -123,22 +123,28 @@ def delete_book(_id):
     return Response(json.dumps(invalid_book_err_msg), 404, mimetype='application/json')
 
 
+# if __name__ == '__main__':
+#     LOGGER.setLevel(logging.DEBUG)
+#     FORMATTER = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#
+#     PARSER = argparse.ArgumentParser()
+#     PARSER.add_argument('--port', type=int, default=5000, help='Port number')
+#     PARSER.add_argument('--log_method', type=str, default='console', help='Logging method')
+#     PARSER.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
+#     ARGS = PARSER.parse_args()
+#
+#     if ARGS.log_method.__eq__('file'):
+#         HANDLER = logging.FileHandler('log/app.logger')
+#     else:
+#         HANDLER = logging.StreamHandler()
+#     HANDLER.setLevel(logging.getLevelName(ARGS.log_lvl))
+#     HANDLER.setFormatter(FORMATTER)
+#     LOGGER.addHandler(HANDLER)
+#
+#     app.run(port=ARGS.port)
+
+
+application = create_app()
+
 if __name__ == '__main__':
-    LOGGER.setLevel(logging.DEBUG)
-    FORMATTER = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    PARSER = argparse.ArgumentParser()
-    PARSER.add_argument('--port', type=int, default=5000, help='Port number')
-    PARSER.add_argument('--log_method', type=str, default='console', help='Logging method')
-    PARSER.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
-    ARGS = PARSER.parse_args()
-
-    if ARGS.log_method.__eq__('file'):
-        HANDLER = logging.FileHandler('log/app.logger')
-    else:
-        HANDLER = logging.StreamHandler()
-    HANDLER.setLevel(logging.getLevelName(ARGS.log_lvl))
-    HANDLER.setFormatter(FORMATTER)
-    LOGGER.addHandler(HANDLER)
-
-    app.run(port=ARGS.port)
+    application.run()

@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from db.settings import app
+from db.settings import *
 
-db = SQLAlchemy(app)
+application = create_app()
+db = SQLAlchemy(application)
 
 
 class Books_db(db.Model):

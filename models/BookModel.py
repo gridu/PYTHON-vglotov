@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 import json
-from db.settings import app
+from db.settings import *
 from datetime import datetime
 
-db = SQLAlchemy(app)
+application = create_app()
+db = SQLAlchemy(application)
 
 
 class Book(db.Model):
