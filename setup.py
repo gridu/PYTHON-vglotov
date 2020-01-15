@@ -28,6 +28,7 @@ setup(
         'wcwidth >= 0.1.7',
         'Werkzeug >= 0.16.0',
         'zipp >= 0.6.0',
-        'zope.interface >= 4.7.1'
+        'zope.interface >= 4.7.1',
+        'selenium >= 3.141.0'
     ],
 )
