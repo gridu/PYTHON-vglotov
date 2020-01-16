@@ -1,10 +1,7 @@
 import unittest
-import pytest
-import allure
-from selenium import webdriver
-from page_steps import home_page_steps, filter_page_steps
 
-driver = webdriver.Chrome()
+from ui_test.web_driver_init import driver
+from ui_test.page_steps import home_page_steps, filter_page_steps
 
 
 class BlogTest(unittest.TestCase):

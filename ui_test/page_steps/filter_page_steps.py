@@ -1,4 +1,4 @@
-from web_driver_init import driver
+from ui_test.web_driver_init import driver
 
 
 class Filter_page_elements:

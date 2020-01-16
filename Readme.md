@@ -99,3 +99,14 @@ next properties:
         }
 
    expected return code: 200 OK
+   
+   
+# UI Test
+UI test is presented for https://blog.griddynamics.com page and it's filtration.
+To run it execute command:
+
+    python3 -m pytest ui_test/blog_test.py --alluredirve .test_results
+
+To check generated allure report run:
+    
+    allure serve .test_results
