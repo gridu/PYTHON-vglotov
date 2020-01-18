@@ -1,5 +1,3 @@
-import inspect
-
 from cache_decorator import timer, cache_usage
 
 
