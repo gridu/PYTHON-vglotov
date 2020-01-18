@@ -1,10 +1,10 @@
 import inspect
 
-from cache_decorator import timer, cache_usage, cache
+from cache_decorator import timer, cache_usage
 
 
-# @timer
-# @cache_usage
+@timer
+@cache_usage(True)
 def factorial(n):
     if n < 2:
         return 1
