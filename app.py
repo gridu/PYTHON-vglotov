@@ -13,6 +13,7 @@ from models.BookModel import *
 from db.settings import *
 
 LOGGER = logging.getLogger()
+application = create_app()
 
 
 def valid_book_object(book_object):
@@ -36,13 +37,13 @@ def valid_book_object_to_rename(book_object):
     return 'id' in book_object and 'title' in book_object
 
 
-@app.route('/v1/books')
+@application.route('/v1/books')
 def get_books():
     LOGGER.info(' Gathering all books')
     return jsonify({'books': Books_db.get_all_books()})
 
 
-@app.route('/v1/books/manipulation', methods=['GET'])
+@application.route('/v1/books/manipulation', methods=['GET'])
 def get_undefined():
     invalid_book_err_msg = {
         'error': 'No implementation for `GET` method'
@@ -51,12 +52,12 @@ def get_undefined():
     return Response(json.dumps(invalid_book_err_msg), 400, mimetype='application/json')
 
 
-@app.route('/v1/books/manipulation', methods=['POST'])
+@application.route('/v1/books/manipulation', methods=['POST'])
 def add_book():
     request_data = request.get_json()
     if valid_book_object(request_data):
         Books_db.add_book(Books_db(request_data['type'], request_data['title'],
-                          request_data['creation_date'], None))
+                                   request_data['creation_date'], None))
         response = Response('', 201, mimetype='application/json')
         response.headers['Location'] = '/v1/books/info'
         LOGGER.info(' Book with title ' + request_data['title'] + ' is added')
@@ -71,20 +72,20 @@ def add_book():
     return response
 
 
-@app.route('/v1/books/info/<int:_id>')
+@application.route('/v1/books/info/<int:_id>')
 def get_book(_id):
     return_value = Book.get_book_by_id(_id)
     LOGGER.info('Get book with id = ' + str(_id))
     return return_value
 
 
-@app.route('/v1/books/latest/<int:limit>', methods=['GET'])
+@application.route('/v1/books/latest/<int:limit>', methods=['GET'])
 def get_latest_books(limit):
     LOGGER.info('Get latest book with amount limit = ' + str(limit))
     return jsonify({'books': Books_db.get_latest_books(limit)})
 
 
-@app.route('/v1/books/ids', methods=['GET'])
+@application.route('/v1/books/ids', methods=['GET'])
 def get_ids_by_title():
     book_list = Books_db.get_ids_by_title(request.get_json()['title'])
     book_list = [str(book_id[0]) for book_id in book_list]
@@ -93,7 +94,7 @@ def get_ids_by_title():
     return book_list
 
 
-@app.route('/v1/books/manipulation', methods=['PUT'])
+@application.route('/v1/books/manipulation', methods=['PUT'])
 def rename_book():
     request_data = request.get_json()
     if not valid_book_object_to_rename(request_data):
@@ -110,7 +111,7 @@ def rename_book():
     return response
 
 
-@app.route('/v1/books/manipulation/<int:_id>', methods=['DELETE'])
+@application.route('/v1/books/manipulation/<int:_id>', methods=['DELETE'])
 def delete_book(_id):
     if Books_db.delete_book(_id):
         LOGGER.info(' Book with ID ' + str(_id) + ' is deleted')
@@ -141,4 +142,4 @@ if __name__ == '__main__':
     HANDLER.setFormatter(FORMATTER)
     LOGGER.addHandler(HANDLER)
 
-    app.run(port=ARGS.port)
+    application.run(port=ARGS.port)
