@@ -3,21 +3,19 @@ import logging
 
 cache = {}
 LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
 
 
-def cache_usage(func, enable_logging=False):
+def cache_usage(func):
     """Using dict as a cache for input values and function results"""
 
     def wrapper(arg):
         if arg in cache.keys():
-            if enable_logging:
-                LOGGER.info('Cache is used')
-            return cache.get(arg)
-        result = func(arg)
-        cache[arg] = result
-        if not enable_logging:
-            LOGGER.info('Values are added to cache')
-        return result
+            LOGGER.warning('Cache is used for arg ' + str(arg))
+            return cache[arg]
+        cache[arg] = func(arg)
+        LOGGER.warning('Cache is filled by new arg: ' + str(arg))
+        return cache[arg]
 
     return wrapper
 
