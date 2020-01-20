@@ -2,7 +2,7 @@ from cache_decorator import timer, cache_usage, cache
 
 
 @timer
-@cache_usage
+@cache_usage(True)
 def factorial(n):
     if n < 2:
         return 1
