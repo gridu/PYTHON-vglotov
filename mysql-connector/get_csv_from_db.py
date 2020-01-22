@@ -2,29 +2,27 @@ import mysql.connector
 import pandas as pd
 from mysql.connector import errorcode
 
-DB_NAME = 'employees'
+DB_NAME = 'booksDB'
 
-TABLES = {}
-TABLES['test_data'] = (
+TABLES = {'test_data': (
     "CREATE TABLE test_data( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
     " title VARCHAR(500) NOT NULL,"
-    " author VARCHAR(500) NOT NULL)")
+    " author VARCHAR(500) NOT NULL)")}
+
+
+def create_database(_cursor):
+    try:
+        _cursor.execute(
+            "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+    except mysql.connector.Error as err:
+        print("Failed creating database: {}".format(err))
+        exit(1)
+
 
 try:
     cnx = mysql.connector.connect(user='root', password='passw0rd',
                                   host='127.0.0.1')
-
     cursor = cnx.cursor()
-
-
-    def create_database(_cursor):
-        try:
-            _cursor.execute(
-                "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
-        except mysql.connector.Error as err:
-            print("Failed creating database: {}".format(err))
-            exit(1)
-
 
     try:
         cursor.execute("USE {}".format(DB_NAME))
@@ -52,17 +50,15 @@ try:
             print("OK")
 
     add_data = "INSERT INTO test_data (title, author) VALUES ('title', 'author')"
-
     select_all = "SELECT * FROM test_data"
+    columns_query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME = " \
+                    "'test_data'".format(DB_NAME)
 
     cursor.execute(add_data)
     cnx.commit()
     cursor.execute(select_all)
     selected_data = cursor.fetchall()
-
-    query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'employees' " \
-            "AND TABLE_NAME = 'test_data'"
-    cursor.execute(query)
+    cursor.execute(columns_query)
     columns = cursor.fetchall()
     columns = [column[0] for column in columns]
     table_data = pd.DataFrame(selected_data, columns=columns)
