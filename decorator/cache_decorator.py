@@ -7,7 +7,6 @@ logging.basicConfig(
     level=logging.DEBUG,
     datefmt='%I:%M:%S')
 LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.INFO)
 
 
 def cache_usage(enable_logging=False):

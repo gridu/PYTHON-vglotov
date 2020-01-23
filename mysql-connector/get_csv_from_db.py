@@ -1,5 +1,6 @@
 import mysql.connector
 import pandas as pd
+import logging
 from mysql.connector import errorcode
 
 DB_NAME = 'booksDB'
@@ -9,13 +10,22 @@ TABLES = {'test_data': (
     " title VARCHAR(500) NOT NULL,"
     " author VARCHAR(500) NOT NULL)")}
 
+ADD_DATA = "INSERT INTO test_data (title, author) VALUES ('title', 'author')"
+SELECT_ALL = "SELECT * FROM test_data"
+
+LOGGER = logging.getLogger()
+logging.basicConfig(
+    format='[%(asctime)s:%(levelname)s] %(message)s',
+    level=logging.DEBUG,
+    datefmt='%I:%M:%S')
+
 
 def create_database(_cursor):
     try:
         _cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
     except mysql.connector.Error as err:
-        print("Failed creating database: {}".format(err))
+        LOGGER.info("Failed creating database: {}".format(err))
         exit(1)
 
 
@@ -27,36 +37,34 @@ try:
     try:
         cursor.execute("USE {}".format(DB_NAME))
     except mysql.connector.Error as err:
-        print("Database {} does not exists.".format(DB_NAME))
+        LOGGER.info("Database {} does not exists.".format(DB_NAME))
         if err.errno == errorcode.ER_BAD_DB_ERROR:
             create_database(cursor)
-            print("Database {} created successfully.".format(DB_NAME))
+            LOGGER.info("Database {} created successfully.".format(DB_NAME))
             cnx.database = DB_NAME
         else:
-            print(err)
+            LOGGER.info(err)
             exit(1)
 
     for table_name in TABLES:
         table_description = TABLES[table_name]
         try:
-            print("Creating table {}: ".format(table_name), end='')
+            LOGGER.info("Creating table '{}' ".format(table_name))
             cursor.execute(table_description)
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                print("already exists.")
+                LOGGER.info("Already exists")
             else:
-                print(err.msg)
+                LOGGER.info(err.msg)
         else:
-            print("OK")
+            LOGGER.info("OK")
 
-    add_data = "INSERT INTO test_data (title, author) VALUES ('title', 'author')"
-    select_all = "SELECT * FROM test_data"
     columns_query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME = " \
                     "'test_data'".format(DB_NAME)
 
-    cursor.execute(add_data)
+    cursor.execute(ADD_DATA)
     cnx.commit()
-    cursor.execute(select_all)
+    cursor.execute(SELECT_ALL)
     selected_data = cursor.fetchall()
     cursor.execute(columns_query)
     columns = cursor.fetchall()
@@ -67,11 +75,11 @@ try:
 
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("Something is wrong with your user name or password")
+        LOGGER.info("Something is wrong with your user name or password")
     elif err.errno == errorcode.ER_BAD_DB_ERROR:
-        print("Database does not exist")
+        LOGGER.info("Database does not exist")
     else:
-        print(err)
+        LOGGER.info(err)
 else:
     cursor.close()
     cnx.close()
