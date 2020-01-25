@@ -1,10 +1,12 @@
+import argparse
+
 import mysql.connector
-import pandas as pd
 import logging
+import csv
 from mysql.connector import errorcode
 
 DB_NAME = 'booksDataBase'
-TABLE_NAME = 'test_data1'
+TABLE_NAME = 'test_data'
 
 TABLES = {TABLE_NAME: (
         "CREATE TABLE " + TABLE_NAME + " ( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
@@ -51,39 +53,51 @@ def extract_table_data_to_csv(_cursor, path_to_csv, _DB_NAME, _table_name):
     _cursor.execute(SELECT_ALL_QUERY)
     selected_data = _cursor.fetchall()
     _cursor.execute(columns_query)
-    _columns = cursor.fetchall()
+    _columns = _cursor.fetchall()
     _columns = [column[0] for column in _columns]
-    table_data = pd.DataFrame(selected_data, columns=_columns)
-    table_data.to_csv(path_to_csv, index=True)
+    fp = open(path_to_csv, 'w')
+    myFile = csv.writer(fp)
+    myFile.writerow(_columns)
+    myFile.writerows(selected_data)
+    fp.close()
 
 
-try:
-    cnx = mysql.connector.connect(user='root', password='passw0rd',
-                                  host='127.0.0.1')
-    cursor = cnx.cursor()
-
+if __name__ == '__main__':
     try:
-        cursor.execute("USE {}".format(DB_NAME))
+        PARSER = argparse.ArgumentParser()
+        PARSER.add_argument('--user', type=str, default='root', help='Root user name')
+        PARSER.add_argument('--passw', type=str, default='none', help='Root user pass')
+        ARGS = PARSER.parse_args()
+
+        user = ARGS.user
+        password = ARGS.passw
+
+        cnx = mysql.connector.connect(user=user, password=password,
+                                      host='127.0.0.1')
+        cursor = cnx.cursor()
+
+        try:
+            cursor.execute("USE {}".format(DB_NAME))
+        except mysql.connector.Error as err:
+            LOGGER.info("Database {} does not exists.".format(DB_NAME))
+            if err.errno == errorcode.ER_BAD_DB_ERROR:
+                create_database(cursor)
+                LOGGER.info("Database {} created successfully.".format(DB_NAME))
+                cnx.database = DB_NAME
+            else:
+                LOGGER.info(err)
+                exit(1)
+
+        create_tables(TABLES)
+        cursor.execute(ADD_DATA_QUERY)
+        cnx.commit()
+        extract_table_data_to_csv(cursor, 'mysql-connector/table_data.csv', DB_NAME, TABLE_NAME)
+
     except mysql.connector.Error as err:
-        LOGGER.info("Database {} does not exists.".format(DB_NAME))
-        if err.errno == errorcode.ER_BAD_DB_ERROR:
-            create_database(cursor)
-            LOGGER.info("Database {} created successfully.".format(DB_NAME))
-            cnx.database = DB_NAME
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            LOGGER.info("Something is wrong with your user name or password")
         else:
             LOGGER.info(err)
-            exit(1)
-
-    create_tables(TABLES)
-    cursor.execute(ADD_DATA_QUERY)
-    cnx.commit()
-    extract_table_data_to_csv(cursor, 'mysql-connector/testCSV.csv', DB_NAME, TABLE_NAME)
-
-except mysql.connector.Error as err:
-    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        LOGGER.info("Something is wrong with your user name or password")
     else:
-        LOGGER.info(err)
-else:
-    cursor.close()
-    cnx.close()
+        cursor.close()
+        cnx.close()

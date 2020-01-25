@@ -110,3 +110,26 @@ To run it execute command:
 To check generated allure report run:
     
     allure serve .test_results
+
+
+# MySQL connector
+To install MySQL server run:
+
+    brew install mysql
+
+To set up root user run:
+
+    mysql_secure_installation
+
+and set some password. Then run:
+
+    chmod u+r+x mysql_connector_run.sh
+    
+to give sh file execute permission. Then 
+
+    ./mysql_connector_run.sh <name> <password>
+
+with name and password set for your user.
+
+
+
