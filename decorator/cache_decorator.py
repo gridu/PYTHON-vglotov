@@ -1,9 +1,11 @@
 import time
 import logging
 
+from functools import wraps
+
 cache = {}
 logging.basicConfig(
-    format='[%(asctime)s:%(levelname)s] %(message)s',
+    format='[%(asctime)s : %(levelname)s] %(message)s',
     level=logging.DEBUG,
     datefmt='%I:%M:%S')
 LOGGER = logging.getLogger()
@@ -15,15 +17,16 @@ def cache_usage(enable_logging=False):
 
     def real_decorator(f):
 
+        @wraps(f)
         def wrapper(arg):
             if arg in cache:
                 if enable_logging:
-                    LOGGER.warning('Cache is used for arg ' + str(arg))
+                    LOGGER.warning('Cache is used for arg ' + str(arg) + ' in method: ' + f.__name__)
                 return cache.get(arg)
             result = f(arg)
             cache[arg] = result
             if enable_logging:
-                LOGGER.warning('Cache is filled by new arg: ' + str(arg))
+                LOGGER.warning('Cache is filled by new arg: ' + str(arg) + ' in method: ' + f.__name__)
             return result
 
         return wrapper
