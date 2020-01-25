@@ -6,10 +6,9 @@ from functools import wraps
 cache = {}
 logging.basicConfig(
     format='[%(asctime)s : %(levelname)s] %(message)s',
-    level=logging.DEBUG,
+    level=logging.INFO,
     datefmt='%I:%M:%S')
 LOGGER = logging.getLogger()
-LOGGER.setLevel(logging.INFO)
 
 
 def cache_usage(enable_logging=False):
@@ -21,12 +20,12 @@ def cache_usage(enable_logging=False):
         def wrapper(arg):
             if arg in cache:
                 if enable_logging:
-                    LOGGER.warning('Cache is used for arg ' + str(arg) + ' in method: ' + f.__name__)
+                    LOGGER.info('Cache is used for arg ' + str(arg) + ' in method: ' + '\'' + f.__name__ + '\'')
                 return cache.get(arg)
             result = f(arg)
             cache[arg] = result
             if enable_logging:
-                LOGGER.warning('Cache is filled by new arg: ' + str(arg) + ' in method: ' + f.__name__)
+                LOGGER.info('Cache is filled by new arg: ' + str(arg) + ' in method: ' + '\'' + f.__name__ + '\'')
             return result
 
         return wrapper
@@ -42,7 +41,7 @@ def timer(func):
         value = func(*args, **kwargs)
         end_time = time.perf_counter()
         run_time = end_time - start_time
-        LOGGER.warning(f"Finished {func.__name__!r} in {run_time:.4f} secs")
+        LOGGER.info(f"Finished method {func.__name__!r} in {run_time:.4f} secs")
         return value
 
     return wrapper_timer

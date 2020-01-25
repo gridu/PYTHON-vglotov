@@ -14,5 +14,6 @@ print(factorial(11))
 print(factorial(10))
 print(factorial(9))
 print('----------------')
+print('Cache values:')
 for element in cache:
     print(str(element) + ' | ' + str(cache[element]))
