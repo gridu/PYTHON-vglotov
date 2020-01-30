@@ -2,39 +2,16 @@
 This module runs the library with no books in it.
 """
 
-import json
 import logging
 import argparse
 
 from flask import jsonify, request, Response
-from enums.BookTypes import *
 from db.Books_db import *
 from models.BookModel import *
 from db.settings import *
 
 LOGGER = logging.getLogger()
 application = create_app()
-
-
-def valid_book_object(book_object):
-    """
-    Method checks whether passed parameter is valid book object to create.
-
-    Args:
-        book_object (json): book object to create in DB.
-
-    Returns:
-        bool: True for valid object, False otherwise.
-    """
-    available_types = []
-    for book in BookType:
-        available_types.append(book.value)
-    return book_object.get('type') in available_types and 'title' in book_object \
-           and 'creation_date' in book_object
-
-
-def valid_book_object_to_rename(book_object):
-    return 'id' in book_object and 'title' in book_object
 
 
 @application.route('/v1/books')
@@ -134,7 +111,7 @@ if __name__ == '__main__':
     PARSER.add_argument('--log_lvl', type=str, default='INFO', help='Logging level')
     ARGS = PARSER.parse_args()
 
-    if ARGS.log_method.__eq__('file'):
+    if ARGS.log_method == 'file':
         HANDLER = logging.FileHandler('log/app.logger')
     else:
         HANDLER = logging.StreamHandler()

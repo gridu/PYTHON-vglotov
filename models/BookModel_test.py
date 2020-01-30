@@ -57,9 +57,9 @@ class BookTest2(unittest.TestCase):
         book_id = (Book.get_book_by_title(title)[0])['id']
         Book.rename_book(book_id, new_title)
         book = Book.get_book_by_id(book_id)
-        assert book['type'].__eq__('Drama')
-        assert book['title'].__eq__(new_title)
-        assert book['creation_date'].__eq__('2019-12-04')
+        assert book['type'] == 'Drama'
+        assert book['title'] == new_title
+        assert book['creation_date'] == '2019-12-04'
         assert book['updated_date_time']
         assert Books_db.delete_book(book_id)
 
