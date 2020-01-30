@@ -1,11 +1,9 @@
 import pytest
 import unittest
-import os
 
 from models.BookModel import *
 from db.Books_db import Books_db
 from app import get_undefined
-from db.settings import database_name
 
 book_title = None
 
