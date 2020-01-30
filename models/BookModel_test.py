@@ -31,15 +31,6 @@ class BookTest1(unittest.TestCase):
         assert Book.get_book_by_title(new_title).__len__() == 1
         self.book_title = new_title
 
-    @classmethod
-    def tearDownClass(cls):
-        try:
-            os.chdir('..')
-            os.chdir('db')
-            os.remove(database_name)
-        except FileNotFoundError:
-            print('exception ' + os.getcwd())
-
 
 class BookTest2(unittest.TestCase):
 
@@ -104,12 +95,6 @@ class BookTest2(unittest.TestCase):
         for book_id in id_to_delete:
             assert Books_db.delete_book(book_id)
 
-    @classmethod
-    def tearDownClass(cls):
-        os.chdir('..')
-        os.chdir('db')
-        os.remove(database_name)
-
 
 class BookTestWithoutLibraryUsage(unittest.TestCase):
 
@@ -124,8 +109,3 @@ class BookTestWithoutLibraryUsage(unittest.TestCase):
     def test_undefined_response_manipulation_get(self):
         response_body = json.loads(get_undefined().get_data().decode('utf8'))
         self.assertEqual('No implementation for `GET` method', response_body['error'])
-
-    # @classmethod
-    # def tearDownClass(cls):
-    #     os.chdir('/Library')
-    #     os.remove('db/' + database_name)

@@ -1,11 +1,14 @@
+import tempfile
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 database_name = 'bookDBtest.db'
+temp_DB_dir = tempfile.mkdtemp()
 
 
 class BaseConfig(object):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + database_name
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + temp_DB_dir + '/' + database_name
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
