@@ -5,7 +5,7 @@ import logging
 import csv
 from mysql.connector import errorcode
 
-DB_NAME = 'booksDataBase'
+DB_NAME = 'csvToGetDB'
 TABLE_NAME = 'test_data'
 
 TABLES = {TABLE_NAME: (
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     try:
         PARSER = argparse.ArgumentParser()
         PARSER.add_argument('--user', type=str, default='root', help='Root user name')
-        PARSER.add_argument('--passw', type=str, default='none', help='Root user pass')
+        PARSER.add_argument('--passw', type=str, default='passw0rd', help='Root user pass')
         ARGS = PARSER.parse_args()
 
         user = ARGS.user
