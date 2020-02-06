@@ -1,1 +1,0 @@
-INSERT INTO test_data (title, author) VALUES ('title', 'author');

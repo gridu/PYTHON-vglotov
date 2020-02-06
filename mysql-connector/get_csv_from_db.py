@@ -5,7 +5,7 @@ import logging
 import csv
 from mysql.connector import errorcode
 
-DB_NAME = 'csvToGetDB'
+DB_NAME = 'csvToGetDBdocker'
 TABLE_NAME = 'test_data'
 
 TABLES = {TABLE_NAME: (

@@ -113,23 +113,11 @@ To check generated allure report run:
 
 
 # MySQL connector
-To install MySQL server run:
+To extract data from table run
 
-    brew install mysql
+    ./mysql_connector_run.sh
 
-To set up root user run:
-
-    mysql_secure_installation
-
-and set some password. Then run:
-
-    chmod u+r+x mysql_connector_run.sh
-    
-to give sh file execute permission. Then 
-
-    ./mysql_connector_run.sh <name> <password>
-
-with name and password set for your user.
+this will create DB and table inside and extract test table data into csv file inside mysql-connector folder
 
 
 
