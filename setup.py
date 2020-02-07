@@ -32,7 +32,6 @@ setup(
         'zope.interface >= 4.7.1',
         'selenium >= 3.141.0',
         'numpy >= 1.18.1',
-        'pandas >= 0.25.3',
         'python-dateutil >= 2.8.1',
     ],
 )

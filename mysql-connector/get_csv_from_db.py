@@ -64,15 +64,7 @@ def extract_table_data_to_csv(_cursor, path_to_csv, _DB_NAME, _table_name):
 
 if __name__ == '__main__':
     try:
-        PARSER = argparse.ArgumentParser()
-        PARSER.add_argument('--user', type=str, default='root', help='Root user name')
-        PARSER.add_argument('--passw', type=str, default='passw0rd', help='Root user pass')
-        ARGS = PARSER.parse_args()
-
-        user = ARGS.user
-        password = ARGS.passw
-
-        cnx = mysql.connector.connect(user=user, password=password,
+        cnx = mysql.connector.connect(user='root', password='passw0rd',
                                       host='127.0.0.1')
         cursor = cnx.cursor()
 
