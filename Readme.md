@@ -110,3 +110,14 @@ To run it execute command:
 To check generated allure report run:
     
     allure serve .test_results
+
+
+# MySQL connector
+To extract data from table run
+
+    ./mysql_connector_run.sh
+
+this will create DB and table inside and extract test table data into csv file inside mysql-connector folder
+
+
+

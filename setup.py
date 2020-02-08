@@ -15,6 +15,7 @@ setup(
         'Jinja2 >= 2.10.3',
         'MarkupSafe >= 1.1.1',
         'more-itertools >= 7.2.0',
+        'mysql-connector-python >= 8.0.19',
         'packaging >= 19.2',
         'pluggy >= 0.13.0',
         'py >= 1.8.0',
@@ -29,6 +30,8 @@ setup(
         'Werkzeug >= 0.16.0',
         'zipp >= 0.6.0',
         'zope.interface >= 4.7.1',
-        'selenium >= 3.141.0'
+        'selenium >= 3.141.0',
+        'numpy >= 1.18.1',
+        'python-dateutil >= 2.8.1',
     ],
 )
