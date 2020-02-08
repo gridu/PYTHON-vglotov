@@ -120,4 +120,14 @@ To extract data from table run
 this will create DB and table inside and extract test table data into csv file inside mysql-connector folder
 
 
+# File creating via SSH
+To execute run
 
+     python3 ssh_module/ssh_module.py <host> <user>
+     
+to use custom values for host and user or
+
+    python3 ssh_module/ssh_module.py
+
+to run for default values set.
+In case localhost using file will be created in user's root directory.
