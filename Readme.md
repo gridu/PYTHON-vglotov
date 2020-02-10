@@ -123,9 +123,9 @@ this will create DB and table inside and extract test table data into csv file i
 # File creating via SSH
 To execute run
 
-     python3 ssh_module/ssh_module.py <host> <user>
+     python3 ssh_module/ssh_module.py <host> <user> <command script>
      
-to use custom values for host and user or
+to use custom values for host, user and command or
 
     python3 ssh_module/ssh_module.py
 
