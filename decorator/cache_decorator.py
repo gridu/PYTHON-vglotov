@@ -20,12 +20,12 @@ def cache_usage(enable_logging=False):
         def wrapper(arg):
             if arg in cache:
                 if enable_logging:
-                    LOGGER.info('Cache is used for arg ' + str(arg) + ' in method: ' + '\'' + f.__name__ + '\'')
+                    LOGGER.info('Cache is used for arg %s in method: \'%s\'', str(arg), f.__name__)
                 return cache.get(arg)
             result = f(arg)
             cache[arg] = result
             if enable_logging:
-                LOGGER.info('Cache is filled by new arg: ' + str(arg) + ' in method: ' + '\'' + f.__name__ + '\'')
+                LOGGER.info('Cache is filled by new arg %s in method: \'%s\'', str(arg), f.__name__)
             return result
 
         return wrapper

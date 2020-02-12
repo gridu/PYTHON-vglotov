@@ -1,8 +1,7 @@
-import argparse
-
 import mysql.connector
 import logging
 import csv
+
 from mysql.connector import errorcode
 
 DB_NAME = 'csvToGetDBdocker'
@@ -87,7 +86,7 @@ if __name__ == '__main__':
 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            LOGGER.info("Something is wrong with your user name or password")
+            LOGGER.info('Something is wrong with your user name or password')
         else:
             LOGGER.info(err)
     else:
