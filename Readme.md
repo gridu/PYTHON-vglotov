@@ -115,9 +115,14 @@ To check generated allure report run:
 # MySQL connector
 To extract data from table run
 
+    ./mysql_connector_run.sh <db_name> <table_name>
+
+to use custom name for DB and table or
+
     ./mysql_connector_run.sh
 
-this will create DB and table inside and extract test table data into csv file inside mysql-connector folder
+to run for default values set.
+This will create DB and table inside and extract test table data into csv file inside 'mysql-connector' folder
 
 
 # File creating via SSH

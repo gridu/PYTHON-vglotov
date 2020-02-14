@@ -1,19 +1,9 @@
+import argparse
 import mysql.connector
 import logging
 import csv
 
 from mysql.connector import errorcode
-
-DB_NAME = 'csvToGetDBdocker'
-TABLE_NAME = 'test_data'
-
-TABLES = {TABLE_NAME: (
-        "CREATE TABLE " + TABLE_NAME + " ( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                       " title VARCHAR(500) NOT NULL,"
-                                       " author VARCHAR(500) NOT NULL)")}
-
-ADD_DATA_QUERY = "INSERT INTO {} (title, author) VALUES ('title', 'author')".format(TABLE_NAME)
-SELECT_ALL_QUERY = "SELECT * FROM {}".format(TABLE_NAME)
 
 LOGGER = logging.getLogger()
 logging.basicConfig(
@@ -62,6 +52,23 @@ def extract_table_data_to_csv(_cursor, path_to_csv, _DB_NAME, _table_name):
 
 
 if __name__ == '__main__':
+
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument('--db', type=str, default='db_for_csv')
+    PARSER.add_argument('--table', type=str, default='table_for_data')
+    ARGS = PARSER.parse_args()
+
+    DB_NAME = ARGS.db
+    TABLE_NAME = ARGS.table
+
+    TABLES = {TABLE_NAME: (
+            "CREATE TABLE " + TABLE_NAME + " ( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                           " title VARCHAR(500) NOT NULL,"
+                                           " author VARCHAR(500) NOT NULL)")}
+
+    ADD_DATA_QUERY = "INSERT INTO {} (title, author) VALUES ('title', 'author')".format(TABLE_NAME)
+    SELECT_ALL_QUERY = "SELECT * FROM {}".format(TABLE_NAME)
+
     try:
         cnx = mysql.connector.connect(user='root', password='passw0rd',
                                       host='127.0.0.1')
