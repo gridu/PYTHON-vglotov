@@ -15,9 +15,9 @@ logging.basicConfig(
 def create_database(_cursor):
     try:
         _cursor.execute(
-            "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+            f'CREATE DATABASE {DB_NAME} DEFAULT CHARACTER SET \'utf8\'')
     except mysql.connector.Error as _err:
-        LOGGER.info("Failed creating database: {}".format(_err))
+        LOGGER.info(f'Failed creating database: {_err}')
         exit(1)
 
 
@@ -25,20 +25,20 @@ def create_tables(_TABLES):
     for table_name in TABLES:
         table_description = TABLES[table_name]
         try:
-            LOGGER.info("Creating table '{}' ".format(table_name))
+            LOGGER.info(f'Creating table \'{table_name}\'')
             cursor.execute(table_description)
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                LOGGER.info("Already exists")
+        except mysql.connector.Error as _err:
+            if _err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                LOGGER.info('Already exists')
             else:
-                LOGGER.info(err.msg)
+                LOGGER.info(_err.msg)
         else:
-            LOGGER.info("OK")
+            LOGGER.info('Table created')
 
 
-def extract_table_data_to_csv(_cursor, path_to_csv, _DB_NAME, _table_name):
-    columns_query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{}' AND TABLE_NAME = " \
-                    "'{}'".format(_DB_NAME, _table_name)
+def extract_table_data_to_csv(_cursor, path_to_csv, _db_name, _table_name):
+    columns_query = f'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = \'{_db_name}\' AND ' \
+                    f'TABLE_NAME = \'{_table_name}\' '
     _cursor.execute(SELECT_ALL_QUERY)
     selected_data = _cursor.fetchall()
     _cursor.execute(columns_query)
@@ -62,12 +62,12 @@ if __name__ == '__main__':
     TABLE_NAME = ARGS.table
 
     TABLES = {TABLE_NAME: (
-            "CREATE TABLE " + TABLE_NAME + " ( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                           " title VARCHAR(500) NOT NULL,"
-                                           " author VARCHAR(500) NOT NULL)")}
+        f'CREATE TABLE {TABLE_NAME} ( date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,'
+        ' title VARCHAR(500) NOT NULL,'
+        ' author VARCHAR(500) NOT NULL)')}
 
-    ADD_DATA_QUERY = "INSERT INTO {} (title, author) VALUES ('title', 'author')".format(TABLE_NAME)
-    SELECT_ALL_QUERY = "SELECT * FROM {}".format(TABLE_NAME)
+    ADD_DATA_QUERY = f'INSERT INTO {TABLE_NAME} (title, author) VALUES (\'title\', \'author\')'
+    SELECT_ALL_QUERY = f'SELECT * FROM {TABLE_NAME}'
 
     try:
         cnx = mysql.connector.connect(user='root', password='passw0rd',
@@ -75,12 +75,12 @@ if __name__ == '__main__':
         cursor = cnx.cursor()
 
         try:
-            cursor.execute("USE {}".format(DB_NAME))
+            cursor.execute(f'USE {DB_NAME}')
         except mysql.connector.Error as err:
-            LOGGER.info("Database {} does not exists.".format(DB_NAME))
+            LOGGER.info(f'Database {DB_NAME} does not exists.')
             if err.errno == errorcode.ER_BAD_DB_ERROR:
                 create_database(cursor)
-                LOGGER.info("Database {} created successfully.".format(DB_NAME))
+                LOGGER.info(f'Database {DB_NAME} created successfully.')
                 cnx.database = DB_NAME
             else:
                 LOGGER.info(err)
