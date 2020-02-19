@@ -2,25 +2,25 @@
 This module runs the library with no books in it.
 """
 
-import logging
 import argparse
+import logging
 
 from flask import jsonify, request, Response
+
 from db.Books_db import *
 from models.BookModel import *
-from db.settings import *
 
 LOGGER = logging.getLogger()
-application = create_app()
+APPLICATION = create_app()
 
 
-@application.route('/v1/books')
+@APPLICATION.route('/v1/books')
 def get_books():
     LOGGER.info(' Gathering all books')
     return jsonify({'books': Books_db.get_all_books()})
 
 
-@application.route('/v1/books/manipulation', methods=['GET'])
+@APPLICATION.route('/v1/books/manipulation', methods=['GET'])
 def get_undefined():
     invalid_book_err_msg = {
         'error': 'No implementation for `GET` method'
@@ -29,7 +29,7 @@ def get_undefined():
     return Response(json.dumps(invalid_book_err_msg), 400, mimetype='application/json')
 
 
-@application.route('/v1/books/manipulation', methods=['POST'])
+@APPLICATION.route('/v1/books/manipulation', methods=['POST'])
 def add_book():
     request_data = request.get_json()
     if valid_book_object(request_data):
@@ -37,7 +37,7 @@ def add_book():
                                    request_data['creation_date'], None))
         response = Response('', 201, mimetype='application/json')
         response.headers['Location'] = '/v1/books/info'
-        LOGGER.info(' Book with title ' + request_data['title'] + ' is added')
+        LOGGER.info('Book with title %s is added', request_data['title'])
         return response
 
     invalid_book_err_msg = {
@@ -49,29 +49,29 @@ def add_book():
     return response
 
 
-@application.route('/v1/books/info/<int:_id>')
+@APPLICATION.route('/v1/books/info/<int:_id>')
 def get_book(_id):
     return_value = Book.get_book_by_id(_id)
-    LOGGER.info('Get book with id = ' + str(_id))
+    LOGGER.info('Get book with id = %s', str(_id))
     return return_value
 
 
-@application.route('/v1/books/latest/<int:limit>', methods=['GET'])
+@APPLICATION.route('/v1/books/latest/<int:limit>', methods=['GET'])
 def get_latest_books(limit):
-    LOGGER.info('Get latest book with amount limit = ' + str(limit))
+    LOGGER.info('Get latest book with amount limit = %s', str(limit))
     return jsonify({'books': Books_db.get_latest_books(limit)})
 
 
-@application.route('/v1/books/ids', methods=['GET'])
+@APPLICATION.route('/v1/books/ids', methods=['GET'])
 def get_ids_by_title():
     book_list = Books_db.get_ids_by_title(request.get_json()['title'])
     book_list = [str(book_id[0]) for book_id in book_list]
     book_list = 'book_ids: ' + ', '.join(book_list)
-    LOGGER.info(' Get all book IDs with title = ' + request.get_json()['title'])
+    LOGGER.info(' Get all book IDs with title = %s', request.get_json()['title'])
     return book_list
 
 
-@application.route('/v1/books/manipulation', methods=['PUT'])
+@APPLICATION.route('/v1/books/manipulation', methods=['PUT'])
 def rename_book():
     request_data = request.get_json()
     if not valid_book_object_to_rename(request_data):
@@ -83,15 +83,14 @@ def rename_book():
 
     Book.rename_book(request_data['id'], request_data['title'])
     response = Response('', status=204, mimetype='application/json')
-    LOGGER.info(' Book with ID ' + str(request_data['id']) + ' is renamed to '
-                + request_data['title'])
+    LOGGER.info(' Book with ID %s is renamed to %s', str(request_data['id']), request_data['title'])
     return response
 
 
-@application.route('/v1/books/manipulation/<int:_id>', methods=['DELETE'])
+@APPLICATION.route('/v1/books/manipulation/<int:_id>', methods=['DELETE'])
 def delete_book(_id):
     if Books_db.delete_book(_id):
-        LOGGER.info(' Book with ID ' + str(_id) + ' is deleted')
+        LOGGER.info(' Book with ID %s is deleted', str(_id))
         return Response('', 204)
 
     invalid_book_err_msg = {
@@ -119,4 +118,4 @@ if __name__ == '__main__':
     HANDLER.setFormatter(FORMATTER)
     LOGGER.addHandler(HANDLER)
 
-    application.run(port=ARGS.port)
+    APPLICATION.run(port=ARGS.port)

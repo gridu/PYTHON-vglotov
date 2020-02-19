@@ -3,7 +3,7 @@ import logging
 
 from functools import wraps
 
-cache = {}
+CACHE = {}
 logging.basicConfig(
     format='[%(asctime)s : %(levelname)s] %(message)s',
     level=logging.INFO,
@@ -14,18 +14,20 @@ LOGGER = logging.getLogger()
 def cache_usage(enable_logging=False):
     """Using dict as a cache for input values and function results"""
 
-    def real_decorator(f):
+    def real_decorator(func):
 
-        @wraps(f)
+        @wraps(func)
         def wrapper(arg):
-            if arg in cache:
+            if arg in CACHE:
                 if enable_logging:
-                    LOGGER.info('Cache is used for arg %s in method: \'%s\'', str(arg), f.__name__)
-                return cache.get(arg)
-            result = f(arg)
-            cache[arg] = result
+                    LOGGER.info('Cache is used for arg %s in method: \'%s\'',
+                                str(arg), func.__name__)
+                return CACHE.get(arg)
+            result = func(arg)
+            CACHE[arg] = result
             if enable_logging:
-                LOGGER.info('Cache is filled by new arg %s in method: \'%s\'', str(arg), f.__name__)
+                LOGGER.info('Cache is filled by new arg %s in method: \'%s\'',
+                            str(arg), func.__name__)
             return result
 
         return wrapper
@@ -41,7 +43,7 @@ def timer(func):
         value = func(*args, **kwargs)
         end_time = time.perf_counter()
         run_time = end_time - start_time
-        LOGGER.info(f"Finished method {func.__name__!r} in {run_time:.4f} secs")
+        LOGGER.info(f'Finished method {func.__name__!r} in {run_time:.4f} secs')
         return value
 
     return wrapper_timer

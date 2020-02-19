@@ -1,7 +1,9 @@
 import argparse
-import mysql.connector
-import logging
 import csv
+import logging
+import sys
+
+import mysql.connector
 
 from mysql.connector import errorcode
 
@@ -18,7 +20,7 @@ def create_database(_cursor):
             f'CREATE DATABASE {DB_NAME} DEFAULT CHARACTER SET \'utf8\'')
     except mysql.connector.Error as _err:
         LOGGER.info(f'Failed creating database: {_err}')
-        exit(1)
+        sys.exit(1)
 
 
 def create_tables(_TABLES):
@@ -26,7 +28,7 @@ def create_tables(_TABLES):
         table_description = TABLES[table_name]
         try:
             LOGGER.info(f'Creating table \'{table_name}\'')
-            cursor.execute(table_description)
+            CURSOR.execute(table_description)
         except mysql.connector.Error as _err:
             if _err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 LOGGER.info('Already exists')
@@ -37,18 +39,18 @@ def create_tables(_TABLES):
 
 
 def extract_table_data_to_csv(_cursor, path_to_csv, _db_name, _table_name):
-    columns_query = f'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = \'{_db_name}\' AND ' \
-                    f'TABLE_NAME = \'{_table_name}\' '
+    columns_query = f'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE ' \
+                    f'TABLE_SCHEMA = \'{_db_name}\' AND TABLE_NAME = \'{_table_name}\' '
     _cursor.execute(SELECT_ALL_QUERY)
     selected_data = _cursor.fetchall()
     _cursor.execute(columns_query)
     _columns = _cursor.fetchall()
     _columns = [column[0] for column in _columns]
-    fp = open(path_to_csv, 'w')
-    myFile = csv.writer(fp)
-    myFile.writerow(_columns)
-    myFile.writerows(selected_data)
-    fp.close()
+
+    with open(path_to_csv, 'w') as opened_file:
+        my_file = csv.writer(opened_file)
+        my_file.writerow(_columns)
+        my_file.writerows(selected_data)
 
 
 if __name__ == '__main__':
@@ -70,26 +72,26 @@ if __name__ == '__main__':
     SELECT_ALL_QUERY = f'SELECT * FROM {TABLE_NAME}'
 
     try:
-        cnx = mysql.connector.connect(user='root', password='passw0rd',
+        CNX = mysql.connector.connect(user='root', password='passw0rd',
                                       host='127.0.0.1')
-        cursor = cnx.cursor()
+        CURSOR = CNX.cursor()
 
         try:
-            cursor.execute(f'USE {DB_NAME}')
+            CURSOR.execute(f'USE {DB_NAME}')
         except mysql.connector.Error as err:
             LOGGER.info(f'Database {DB_NAME} does not exists.')
             if err.errno == errorcode.ER_BAD_DB_ERROR:
-                create_database(cursor)
+                create_database(CURSOR)
                 LOGGER.info(f'Database {DB_NAME} created successfully.')
-                cnx.database = DB_NAME
+                CNX.database = DB_NAME
             else:
                 LOGGER.info(err)
-                exit(1)
+                sys.exit(1)
 
         create_tables(TABLES)
-        cursor.execute(ADD_DATA_QUERY)
-        cnx.commit()
-        extract_table_data_to_csv(cursor, 'mysql-connector/table_data.csv', DB_NAME, TABLE_NAME)
+        CURSOR.execute(ADD_DATA_QUERY)
+        CNX.commit()
+        extract_table_data_to_csv(CURSOR, 'mysql-connector/table_data.csv', DB_NAME, TABLE_NAME)
 
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -97,5 +99,5 @@ if __name__ == '__main__':
         else:
             LOGGER.info(err)
     else:
-        cursor.close()
-        cnx.close()
+        CURSOR.close()
+        CNX.close()

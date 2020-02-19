@@ -1,8 +1,8 @@
-from app import valid_book_object, valid_book_object_to_rename
 import unittest
+from app import valid_book_object, valid_book_object_to_rename
 
 
-class BookValidityChecktest(unittest.TestCase):
+class BookValidityCheckTest(unittest.TestCase):
 
     def test_valid_book_object_to_add_recognized(self):
         book = {
@@ -10,24 +10,24 @@ class BookValidityChecktest(unittest.TestCase):
             'title': 'Pomi Dore',
             'type': 'Satire'
         }
-        assert valid_book_object(book)
+        self.assertTrue(valid_book_object(book))
 
     def test_invalid_book_object_to_add_recognized(self):
         book = {
             'creation_date': '1998-10-11',
             'type': 'Pomi Dore'
         }
-        assert not valid_book_object(book)
+        self.assertFalse(valid_book_object(book))
 
     def test_valid_book_object_to_rename_recognized(self):
         book = {
             'id': 2,
             'title': 'Pomi Dore'
         }
-        assert valid_book_object_to_rename(book)
+        self.assertTrue(valid_book_object_to_rename(book))
 
     def test_invalid_book_object_to_rename_recognized(self):
         book = {
             'title': 'Pomi Dore'
         }
-        assert not valid_book_object_to_rename(book)
+        self.assertFalse(valid_book_object_to_rename(book))
