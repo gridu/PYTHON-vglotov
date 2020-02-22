@@ -55,11 +55,6 @@ class Book(DB.Model):
     def get_ids_by_title(_title):
         return [book for book in Book.query.with_entities(Book.id).filter_by(title=_title)]
 
-    def delete_book(_id):
-        is_successful = Book.query.filter_by(id=_id).delete()
-        DB.session.commit()
-        return bool(is_successful)
-
     def rename_book(_id, _title):
         book_to_rename = Book.query.filter_by(id=_id).first()
         book_to_rename.title = _title
