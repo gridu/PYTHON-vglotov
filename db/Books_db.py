@@ -1,17 +1,16 @@
-from flask_sqlalchemy import SQLAlchemy
 from db.settings import *
 
 application = create_app()
-db = SQLAlchemy(application)
+DB = SQLAlchemy(application)
 
 
-class Books_db(db.Model):
+class Books_db(DB.Model):
     __tablename__ = 'books'
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(50))
-    title = db.Column(db.String(256), nullable=False)
-    creation_date = db.Column(db.String(15), nullable=True)
-    updated_date_time = db.Column(db.String(30), nullable=True)
+    id = DB.Column(DB.Integer, primary_key=True)
+    type = DB.Column(DB.String(50))
+    title = DB.Column(DB.String(256), nullable=False)
+    creation_date = DB.Column(DB.String(15), nullable=True)
+    updated_date_time = DB.Column(DB.String(30), nullable=True)
 
     def __init__(self, book_type, title, creation_date, updated_date_time):
         self.type = book_type
@@ -24,12 +23,12 @@ class Books_db(db.Model):
                 'updated_date_time': self.updated_date_time}
 
     def add_book(self):
-        db.session.add(self)
-        db.session.commit()
+        DB.session.add(self)
+        DB.session.commit()
 
     def delete_book(_id):
         is_successful = Books_db.query.filter_by(id=_id).delete()
-        db.session.commit()
+        DB.session.commit()
         return bool(is_successful)
 
     def get_all_books():

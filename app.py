@@ -4,6 +4,7 @@ This module runs the library with no books in it.
 
 import argparse
 import logging
+import json
 
 from flask import jsonify, request, Response
 
